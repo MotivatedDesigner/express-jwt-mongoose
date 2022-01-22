@@ -5,10 +5,10 @@ app.middlewares.checkDuplicateEmail = (req, res, next) => {
     .findOne({ email: req.body.email })
     .exec((err, user) => {
       if (err)
-        next({message: err})
+        return next({message: err})
 
       if (user)
-        next({
+        return next({
           status: 422,
           message: "Failed! Email is already in use!"
         })

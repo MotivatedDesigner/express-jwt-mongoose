@@ -14,6 +14,7 @@ async function setup() {
 
   app.models = {
     roleModel: require('./role_model')(mongoose),
-    userModel: require('./user_model')(mongoose)
+    userModel: require('./user_model')(mongoose),
+    refreshTokenModel: require('./refreshToken_model')(mongoose),
   }
 }

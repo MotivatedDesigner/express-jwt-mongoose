@@ -1,9 +1,11 @@
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 const { userModel, roleModel } = app.models
 
 app.controllers.authController = {
-  signup
+  signup,
+  signin
 }
 
 function signup(req, res, next) {
@@ -48,4 +50,49 @@ function signup(req, res, next) {
     // }
     
   })
+}
+
+function signin(req, res, next) {
+  userModel
+    .findOne({ email: req.body.email })
+    // .populate("role", "-__v")
+    .exec(async (err, user) => {
+      if (err)
+        return next({ message: err })
+
+      if (!user)
+        return next({ status: 404, message: "User Not found." });
+
+      const passwordIsValid = bcrypt.compareSync(req.body.password, user.password)
+
+      if (!passwordIsValid)
+        return next({
+          status: 401,
+          message: "Invalid Password!",
+        })
+
+      const accessToken = jwt.sign({ id: user.id }, app.authConfig.SECRET, {
+        expiresIn: app.authConfig.ACCESS_TOKEN_EXPIRATION
+      })
+
+      const refreshToken = jwt.sign({ id: user.id }, app.authConfig.SECRET)
+
+      res.cookie('access', accessToken, {
+        maxAge: app.authConfig.ACCESS_TOKEN_EXPIRATION * 1000,
+        secure: app.appConfig.NODE_ENV == 'development' ? false : true,
+        httpOnly: true,
+        sameSite: 'lax'
+      })
+      res.cookie('refresh', refreshToken, {
+        secure: app.appConfig.NODE_ENV == 'development' ? false : true,
+        httpOnly: true,
+        sameSite: 'lax'
+      })
+
+      res.status(200).send({
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      })
+    })
 }
