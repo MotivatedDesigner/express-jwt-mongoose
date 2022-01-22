@@ -14,7 +14,7 @@ require('./app/models')
 
 // Middlewares
 app.use(express.json())
-// require('./app/middlewares')(app)
+require('./app/middlewares')
 
 app.listen(
   appConfig.PORT, 

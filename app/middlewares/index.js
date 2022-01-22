@@ -1,9 +1,5 @@
-const cookieParser = require('./cookie_parser')
+app.middlewares = {}
 
-module.exports = (app) => {
-  app.middlewares = {}
+require('./cookie_parser')
 
-  app.use(cookieParser)
-  
-  require('./duplicated_email')(app)
-}
+require('./duplicated_email')

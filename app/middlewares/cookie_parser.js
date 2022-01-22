@@ -1,8 +1,17 @@
-module.exports = (req, res, next) => {
+
+global.app.use((req, res, next) => {
+
   if(req.headers.cookie) {
+    const { cookie: cookieHeader } = req.headers
     req.cookies = {}
-    req.headers.cookie
-      .split(';').
-      forEach(cookie => req.cookies[cookie.split('=')[0].trim()] = cookie.split('=')[1] )
+
+    cookieHeader
+      .split(';')
+      .forEach(cookie => {
+        const name = cookie.split('=')[0].trim()
+        const value = cookie.split('=')[1]
+        req.cookies[name] = value
+      })
   }
-}
+
+})
