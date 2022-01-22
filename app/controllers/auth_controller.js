@@ -14,7 +14,7 @@ function signup(req, res, next) {
 
   user.save((err, user) => {
     if (err)
-      next({ message: err })
+      return next({ message: err })
     res.send({ message: "User was registered successfully!" })
 
     // if (req.body.role) {

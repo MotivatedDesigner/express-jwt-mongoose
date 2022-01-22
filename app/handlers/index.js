@@ -1,2 +1,4 @@
 
 require('./exceptions')
+
+require('./errors')
