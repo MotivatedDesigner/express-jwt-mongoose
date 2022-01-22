@@ -5,7 +5,8 @@ const { userModel, roleModel, refreshTokenModel } = app.models
 
 app.controllers.authController = {
   signup,
-  signin
+  signin,
+  refreshToken
 }
 
 function signup(req, res, next) {
@@ -98,4 +99,44 @@ async function signin(req, res, next) {
         role: user.role,
       })
     })
+}
+
+async function refreshToken(req, res, next) {
+  const reqToken = req.cookies?.refresh
+
+  if (!reqToken)
+    return next({status: 403, message: "Refresh Token is required!" })
+
+  try {
+    const dbToken = await refreshTokenModel.findOne({ token: reqToken })
+
+    if (!dbToken)
+      return next({status: 403, message: "Refresh token is not in database!" })
+
+    if (!dbToken.isValid) {
+      refreshTokenModel.findByIdAndRemove(dbToken._id, { useFindAndModify: false }).exec()
+      
+      return next({
+        status: 403,
+        message: "Refresh token was expired. Please make a new signin request",
+      })
+    }
+
+    const accessToken = jwt.sign(
+      { id: dbToken.user._id }, 
+      app.authConfig.SECRET, {
+        expiresIn: app.authConfig.ACCESS_TOKEN_EXPIRATION,
+      }
+    )
+    res.cookie('access', accessToken, {
+      maxAge: app.authConfig.ACCESS_TOKEN_EXPIRATION * 1000,
+      secure: app.appConfig.NODE_ENV == 'development' ? false : true,
+      httpOnly: true,
+      sameSite: 'lax'
+    })
+
+    res.status(200).send()
+  } catch (err) {
+    return next({ message: err })
+  }
 }
