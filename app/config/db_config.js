@@ -1,4 +1,4 @@
-module.exports = {
+global.app.dbConfig = {
   HOST: "localhost",
   PORT: 27017,
   DB: "booking_system",

@@ -1,5 +1,4 @@
 const express = require('express')
-const appConfig = require('./app/config/app_config')
 
 // App Setup
 const app = express()
@@ -16,7 +15,4 @@ require('./app/models')
 app.use(express.json())
 require('./app/middlewares')
 
-app.listen(
-  appConfig.PORT, 
-  () => console.log(`Server is Up, Port: ${appConfig.PORT}`)
-)
+app.listen(app.appConfig.PORT, () => console.log('Server is Up'))

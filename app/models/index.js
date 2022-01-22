@@ -1,13 +1,11 @@
-const { promisify } = require('util')
 const mongoose = require('mongoose')
 
-const mongooseConnect = promisify(mongoose.connect)
-
 setup()
-async function setup() {
-  const { dbConfig } = global.app.config
 
-  await mongooseConnect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+async function setup() {
+  const { dbConfig } = global.app
+  mongoose
+  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: dbConfig.TIMEOUT,
