@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const dbConfig = require('../config/db_config')
 
-const roleModel = require('./role_model')
+const roleModel = require('./role_model')(mongoose)
+const userModel = require('./user_model')(mongoose)
 
 mongoose
   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
@@ -13,4 +14,5 @@ mongoose
 
 module.exports = {
   roleModel,
+  userModel,
 }
