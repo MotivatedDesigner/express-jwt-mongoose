@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "stop_db" : "net stop mongodb",
+    "start_db" : "net start mongodb"
   },
   "author": "",
   "license": "MIT",
