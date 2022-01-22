@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
-const { userModel, roleModel } = app.models
+const { userModel, roleModel, refreshTokenModel } = app.models
 
 app.controllers.authController = {
   signup,
@@ -12,7 +12,7 @@ function signup(req, res, next) {
   const user = new userModel({
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
-  });
+  })
 
   user.save((err, user) => {
     if (err)
@@ -52,7 +52,7 @@ function signup(req, res, next) {
   })
 }
 
-function signin(req, res, next) {
+async function signin(req, res, next) {
   userModel
     .findOne({ email: req.body.email })
     // .populate("role", "-__v")
@@ -74,14 +74,17 @@ function signin(req, res, next) {
       const accessToken = jwt.sign({ id: user.id }, app.authConfig.SECRET, {
         expiresIn: app.authConfig.ACCESS_TOKEN_EXPIRATION
       })
-
-      const refreshToken = jwt.sign({ id: user.id }, app.authConfig.SECRET)
-
       res.cookie('access', accessToken, {
         maxAge: app.authConfig.ACCESS_TOKEN_EXPIRATION * 1000,
         secure: app.appConfig.NODE_ENV == 'development' ? false : true,
         httpOnly: true,
         sameSite: 'lax'
+      })
+
+      const refreshToken = jwt.sign({ id: user.id }, app.authConfig.SECRET)
+      await refreshTokenModel.create({
+        token: refreshToken,
+        user: user._id
       })
       res.cookie('refresh', refreshToken, {
         secure: app.appConfig.NODE_ENV == 'development' ? false : true,
