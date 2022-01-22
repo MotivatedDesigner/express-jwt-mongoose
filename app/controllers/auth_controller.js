@@ -6,7 +6,7 @@ app.controllers.authController = {
   signup
 }
 
-function signup(req, res) {
+function signup(req, res, next) {
   const user = new userModel({
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),

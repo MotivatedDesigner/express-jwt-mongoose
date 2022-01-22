@@ -20,8 +20,8 @@ require('./app/controllers')
 
 // Routes
 require('./app/routes')
-app.post('/api/auth/signup',(req,res)=>{
-  res.sendStatus(200)
-})
+
+// Handlers
+require('./app/handlers')
 
 app.listen(app.appConfig.PORT, () => console.log('Server is Up'))
