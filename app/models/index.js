@@ -1,11 +1,12 @@
 const { promisify } = require('util')
 const mongoose = require('mongoose')
 
-const dbConfig = require('../config/db_config')
-
 const mongooseConnect = promisify(mongoose.connect)
 
-module.exports = async (app) => {
+setup()
+async function setup() {
+  const { dbConfig } = global.app.config
+
   await mongooseConnect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -13,7 +14,7 @@ module.exports = async (app) => {
   })
   .catch(()=>console.log('nono'))
 
-  app.locals.models = {
+  global.app.models = {
     roleModel: require('./role_model')(mongoose),
     userModel: require('./user_model')(mongoose)
   }
