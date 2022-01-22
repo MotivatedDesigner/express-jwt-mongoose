@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 setup()
 
 async function setup() {
-  const { dbConfig } = global.app
+  const { dbConfig } = app
   mongoose
   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
     useNewUrlParser: true,
@@ -12,7 +12,7 @@ async function setup() {
   })
   .catch(()=>console.log('nono'))
 
-  global.app.models = {
+  app.models = {
     roleModel: require('./role_model')(mongoose),
     userModel: require('./user_model')(mongoose)
   }

@@ -1,5 +1,5 @@
 
-global.app.use((req, res, next) => {
+app.use((req, res, next) => {
 
   if(req.headers.cookie) {
     const { cookie: cookieHeader } = req.headers

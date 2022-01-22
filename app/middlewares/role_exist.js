@@ -1,6 +1,6 @@
 
 app.middlewares.checkRoleExist = (req, res, next) => {
-  const { ROLES } = global.app.authConfig
+  const { ROLES } = app.authConfig
 
   if (req.body.role && !ROLES.includes(req.body.role))
     next({

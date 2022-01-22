@@ -1,6 +1,2 @@
 
-module.exports = (app) => {
-
-  require('./auth_router')(app)
-  
-}
+require('./auth_router')

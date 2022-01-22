@@ -1,4 +1,4 @@
-global.app.dbConfig = {
+app.dbConfig = {
   HOST: "localhost",
   PORT: 27017,
   DB: "booking_system",

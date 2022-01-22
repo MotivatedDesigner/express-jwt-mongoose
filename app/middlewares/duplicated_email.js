@@ -1,6 +1,6 @@
-const { userModel } = global.app.models
+const { userModel } = app.models
 
-global.app.middlewares.checkDuplicatedEmail = (req, res, next) => {
+app.middlewares.checkDuplicateEmail = (req, res, next) => {
   userModel
     .findOne({ email: req.body.email })
     .exec((err, user) => {

@@ -1,4 +1,4 @@
-global.app.appConfig = {
+app.appConfig = {
   NODE_ENV: "development",
   HOST: "localhost",
   PORT: 3333,
