@@ -5,12 +5,9 @@ const mongoose = require('mongoose')
 
 const app = express()
 app.disable('x-powered-by')
+app.use(express.json())
 
 require('./app/models')
-
-app.use((err, req, res) => {
-  console.log(err)
-})
 
 app.listen(
   appConfig.PORT, 
