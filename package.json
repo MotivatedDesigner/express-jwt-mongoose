@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "stop_db" : "net stop mongodb",
-    "start_db" : "net start mongodb"
+    "stop_db": "net stop mongodb",
+    "start_db": "net start mongodb"
   },
-  "author": "",
+  "author": "Ayoub Elmendoub",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",

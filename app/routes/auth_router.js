@@ -1,10 +1,12 @@
 
-const { checkDuplicateEmail, checkRoleExist } = app.middlewares
+const { checkDuplicateEmail } = app.middlewares
 
-app.post("/api/auth/signup", [checkDuplicateEmail, checkRoleExist], controller.signup)
+const { authController } = app.controllers
 
-app.post("/api/auth/signin", controller.signin)
+app.post("/api/auth/signup", [checkDuplicateEmail], authController.signup)
 
-app.get("/api/auth/signout", controller.signout)
+// app.post("/api/auth/signin", controller.signin)
 
-app.get("/api/auth/refreshtoken", controller.refreshToken)
+// app.get("/api/auth/signout", controller.signout)
+
+// app.get("/api/auth/refreshtoken", controller.refreshToken)

@@ -15,4 +15,13 @@ require('./app/models')
 app.use(express.json())
 require('./app/middlewares')
 
+// Controllers
+require('./app/controllers')
+
+// Routes
+require('./app/routes')
+app.post('/api/auth/signup',(req,res)=>{
+  res.sendStatus(200)
+})
+
 app.listen(app.appConfig.PORT, () => console.log('Server is Up'))

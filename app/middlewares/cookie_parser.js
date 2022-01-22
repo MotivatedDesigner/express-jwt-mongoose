@@ -13,5 +13,5 @@ app.use((req, res, next) => {
         req.cookies[name] = value
       })
   }
-
+  next()
 })
