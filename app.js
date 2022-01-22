@@ -5,12 +5,12 @@ const appConfig = require('./app/config/app_config')
 const app = express()
 app.disable('x-powered-by')
 
+// Database Setup
+require('./app/models')(app)
+
 // Middlewares
 app.use(express.json())
 require('./app/middlewares')(app)
-
-// Database Setup
-require('./app/models')
 
 app.listen(
   appConfig.PORT, 

@@ -1,18 +1,20 @@
+const { promisify } = require('util')
 const mongoose = require('mongoose')
+
 const dbConfig = require('../config/db_config')
 
-const roleModel = require('./role_model')(mongoose)
-const userModel = require('./user_model')(mongoose)
+const mongooseConnect = promisify(mongoose.connect)
 
-mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+module.exports = async (app) => {
+  await mongooseConnect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: dbConfig.TIMEOUT,
   })
   .catch(()=>console.log('nono'))
 
-module.exports = {
-  roleModel,
-  userModel,
+  app.locals.models = {
+    roleModel: require('./role_model')(mongoose),
+    userModel: require('./user_model')(mongoose)
+  }
 }
