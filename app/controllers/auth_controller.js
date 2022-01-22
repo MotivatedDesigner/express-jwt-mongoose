@@ -6,6 +6,7 @@ const { userModel, roleModel, refreshTokenModel } = app.models
 app.controllers.authController = {
   signup,
   signin,
+  signout,
   refreshToken
 }
 
@@ -82,11 +83,8 @@ async function signin(req, res, next) {
         sameSite: 'lax'
       })
 
-      const refreshToken = jwt.sign({ id: user.id }, app.authConfig.SECRET)
-      await refreshTokenModel.create({
-        token: refreshToken,
-        user: user._id
-      })
+      const refreshDb = await refreshTokenModel.create({  user: user._id })
+      const refreshToken = jwt.sign({ id: refreshDb._id }, app.authConfig.SECRET)
       res.cookie('refresh', refreshToken, {
         secure: app.appConfig.NODE_ENV == 'development' ? false : true,
         httpOnly: true,
@@ -101,14 +99,33 @@ async function signin(req, res, next) {
     })
 }
 
+async function signout(req, res, next) {
+  const reqToken = req.cookies?.refresh
+
+  if (!reqToken)
+    return next({status: 403, message: "Refresh Token is required!" })
+    
+  try {
+    reqToken = jwt.verify(reqToken, app.authConfig.SECRET)
+    await refreshTokenModel.findByIdAndRemove(reqToken.id, { useFindAndModify: false }).exec()
+    res.clearCookie('refresh')
+    res.clearCookie('access')
+    res.status(200).send()
+  } catch (err) {
+    return next({ message: err })
+  }
+}
+
 async function refreshToken(req, res, next) {
+  console.log(req.cookies)
   const reqToken = req.cookies?.refresh
 
   if (!reqToken)
     return next({status: 403, message: "Refresh Token is required!" })
 
   try {
-    const dbToken = await refreshTokenModel.findOne({ token: reqToken })
+    reqToken = jwt.verify(reqToken, app.authConfig.SECRET)
+    const dbToken = await refreshTokenModel.findById(reqToken.id)
 
     if (!dbToken)
       return next({status: 403, message: "Refresh token is not in database!" })
